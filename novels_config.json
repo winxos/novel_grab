@@ -1,0 +1,14 @@
+{
+  "rules": [
+    {"site":"http://www.aoyuge.com/",
+      "replace":[
+        {"\r\n\r\n":"\n"}],
+      "title":"//*[@id=\"container\"]/div[1]/div/h1/text()",
+      "author":"//*[@id=\"container\"]/div[1]/div/em/text()",
+      "chapter_href":"//*[@id=\"main\"]/div/dl//dd/a/@href",
+      "chapter_name":"//*[@id=\"main\"]/div/dl//dd/a/text()",
+      "chapter_content":"//*[@id=\"BookText\"]/text()",
+      "readme":"download_novel 传入为指定小说全部目录页面入口"
+    }
+  ]
+}
