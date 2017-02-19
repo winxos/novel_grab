@@ -9,6 +9,16 @@
       "chapter_name":"//*[@id=\"main\"]/div/dl//dd/a/text()",
       "chapter_content":"//*[@id=\"BookText\"]/text()",
       "readme":"download_novel 传入为指定小说全部目录页面入口"
+    },
+    {"site":"http://book.zongheng.com/",
+      "replace":[
+        {"\r\n":"\n"}],
+      "title":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/h1/text()",
+      "author":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/span",
+      "chapter_href":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/@href",
+      "chapter_name":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/text()",
+      "chapter_content":"//*[@id=\"chapterContent\"]//p/text()",
+      "readme":"http://book.zongheng.com/ 下载"
     }
   ]
 }

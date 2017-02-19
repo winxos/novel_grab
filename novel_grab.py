@@ -12,7 +12,7 @@ import json
 from multiprocessing import Pool
 from time import clock
 
-RULE_ID = 0
+RULE_ID = 1
 POOLS_SIZE = 50
 
 
@@ -33,7 +33,10 @@ server_url = CONFIG["rules"][RULE_ID]["site"]
 
 def get_chapter(url, loc):
     try:
-        c = etree.HTML(urllib.request.urlopen(url).read())
+        f=urllib.request.urlopen(url)
+        print(f.info())
+        c = etree.HTML(f.read())
+        print(c.xpath(loc)[0].xpath("string(.)"))
         data = "".join(c.xpath(loc))
         data = data.replace('\xa0', '')
         for src, des in replaces:
@@ -52,7 +55,9 @@ def save_txt(name, data, mode='a'):
 def scrape(chapter_info):
     global finished_count
     h, c = chapter_info
-    p = get_chapter(server_url + h, CONFIG["rules"][RULE_ID]["chapter_content"])
+    if not str(h).startswith("http"):
+        h=server_url+h
+    p = get_chapter(h, CONFIG["rules"][RULE_ID]["chapter_content"])
     if p == None:
         print("retry downloading:%s" % h)
         _, p = scrape(chapter_info)
@@ -64,9 +69,9 @@ def download_novel(url_entry):
     global total_count
     st = clock()
     html = etree.HTML(urllib.request.urlopen(url_entry).read())
-    title = "".join(html.xpath(CONFIG["rules"][RULE_ID]["title"]))
-    author = "".join(html.xpath(CONFIG["rules"][RULE_ID]["author"]))
-    file_name = title + author + ".txt"
+    title = html.xpath(CONFIG["rules"][RULE_ID]["title"])[0]
+    author = html.xpath(CONFIG["rules"][RULE_ID]["author"])[0].xpath("string(.)")
+    file_name = title +" "+ author + ".txt"
     href = html.xpath(CONFIG["rules"][RULE_ID]["chapter_href"])
     capital = html.xpath(CONFIG["rules"][RULE_ID]["chapter_name"])
     save_txt(file_name, title + "\n" + author + "\n", mode='w')
@@ -83,4 +88,6 @@ def download_novel(url_entry):
 
 
 if __name__ == '__main__':
-    download_novel('http://www.aoyuge.com/9/9007/index.html')
+    get_chapter('http://book.zongheng.com/chapter/390021/6494853.html','//*[@id=\"chapterContent\"]//p')
+    #download_novel('http://book.zongheng.com/showchapter/390021.html')
+
