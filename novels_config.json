@@ -3,21 +3,23 @@
     {"site":"http://www.aoyuge.com/",
       "replace":[
         {"\r\n\r\n":"\n"}],
-      "title":"//*[@id=\"container\"]/div[1]/div/h1/text()",
-      "author":"//*[@id=\"container\"]/div[1]/div/em/text()",
+      "title":"//*[@id=\"container\"]/div[1]/div/h1",
+      "author":"//*[@id=\"container\"]/div[1]/div/em",
       "chapter_href":"//*[@id=\"main\"]/div/dl//dd/a/@href",
       "chapter_name":"//*[@id=\"main\"]/div/dl//dd/a/text()",
-      "chapter_content":"//*[@id=\"BookText\"]/text()",
+      "chapter_content":"//*[@id=\"BookText\"]",
+      "charset":"gbk",
       "readme":"download_novel 传入为指定小说全部目录页面入口"
     },
     {"site":"http://book.zongheng.com/",
       "replace":[
-        {"\r\n":"\n"}],
-      "title":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/h1/text()",
+        {"\r\n\r\n":"\n"}],
+      "title":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/h1",
       "author":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/span",
       "chapter_href":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/@href",
       "chapter_name":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/text()",
-      "chapter_content":"//*[@id=\"chapterContent\"]//p/text()",
+      "chapter_content":"//*[@id=\"chapterContent\"]",
+      "charset":"utf8",
       "readme":"http://book.zongheng.com/ 下载"
     }
   ]
