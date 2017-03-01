@@ -17,7 +17,8 @@ from functools import partial
 
 POOLS_SIZE = 20
 TRY_TIMES = 3
-SINGLE_THREAD_DEBUG = True
+SINGLE_THREAD_DEBUG = False
+
 with open('novels_config.json', 'r', encoding='utf-8') as f:
     CONFIG = json.load(f)
 
@@ -27,7 +28,12 @@ def get_chapter(url, loc, RULE_ID):
         f = urllib.request.urlopen(url)
         c = etree.HTML(f.read().decode(CONFIG["rules"][RULE_ID]["charset"]))
         # raw elements of div filter none text element
-        raw_txt = ["".join(x.xpath("text()")) for x in c.xpath(loc)]
+        # support two type, div//p/text div/text
+        raw_txt = [x.xpath("text()") for x in c.xpath(loc)]
+        if len(raw_txt) > 1:
+            raw_txt = [x[0] for x in raw_txt]
+        else:
+            raw_txt = raw_txt[0]
         # remove some strange blank.
         data = "\n".join([t.strip() for t in raw_txt])
         # data = data.replace('\xa0', '')
@@ -96,7 +102,9 @@ def download_novel(url_entry):
         pool.close()
         pool.join()
     else:
-        results = map(func, chapter_info)
+        results = []
+        for hc in list(chapter_info)[:10]:
+            results.append(func(hc))
 
     print('[debug] done. used:%f s' % (clock() - st))
     for c, k in results:
@@ -108,6 +116,6 @@ download_novel("your novel chapter lists page link")
 '''
 if __name__ == '__main__':
     # download_novel('http://book.zongheng.com/showchapter/390021.html')
-    download_novel('http://www.aoyuge.com/9/9007/index.html')
+    # download_novel('http://www.aoyuge.com/9/9007/index.html')
     # download_novel('http://www.quanshu.net/book/38/38215/')
-    # download_novel('http://book.zongheng.com/showchapter/403749.html')
+    download_novel('http://book.zongheng.com/showchapter/403749.html')

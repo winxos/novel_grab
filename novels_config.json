@@ -9,7 +9,7 @@
       "chapter_name":"//*[@id=\"main\"]/div/dl//dd/a/text()",
       "chapter_content":"//*[@id=\"BookText\"]",
       "charset":"gbk",
-      "readme":"download_novel 传入为指定小说全部目录页面入口"
+      "readme":"http://www.aoyuge.com/ 下载"
     },
     {"site":"http://book.zongheng.com/",
       "replace":[
