@@ -144,6 +144,6 @@ download_novel("your novel chapter lists page link")
 '''
 if __name__ == '__main__':
     # download_novel('http://book.zongheng.com/showchapter/390021.html')
-    download_novel('http://www.aoyuge.com/9/9007/index.html')
+    download_novel('http://www.aoyuge.com/14/14743/index.html')
     # download_novel('http://www.quanshu.net/book/38/38215/')
     # download_novel('http://book.zongheng.com/showchapter/403749.html')

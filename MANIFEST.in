@@ -1,0 +1,3 @@
+# data package
+# recursive-include *
+include README.md
