@@ -8,7 +8,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 setup(
     name='AIST_novel_grab',
-    version='0.3',
+    version='0.6',
     description='novel grab service',
     long_description=long_description,
     author='winxos',

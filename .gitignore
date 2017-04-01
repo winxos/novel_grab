@@ -3,3 +3,4 @@
 AIST_novel_grab.egg-info/
 build/
 nitrotyper.egg-info/
+novel_grab/__pycache__/

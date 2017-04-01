@@ -13,17 +13,19 @@ import json
 from multiprocessing import Pool, Manager
 from time import clock
 from functools import partial
+import zipfile
+import os  # remove file
+import pkgutil  # 必须采用pkgutil.get_data才能读取egg格式包中的数据
+import sys  # stdout flush
 
 POOLS_SIZE = 20
 TRY_TIMES = 3
 SINGLE_THREAD_DEBUG = False
 
 CONFIG = None
-import pkgutil  # 必须采用pkgutil.get_data才能读取egg格式包中的数据
 
 try:
-    f = pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8')  #
-    CONFIG = json.loads(f)
+    CONFIG = json.loads(pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8'))
 except IOError as e:
     print("[error] %s" % e)
     exit()
@@ -94,6 +96,16 @@ def scrape(rule_id, chapter_info):
 
 
 def download(url_entry):
+    """
+    usage:
+    from novel_grab import novel_grab
+    novel_grab.download('the url or the novel all chapter page')
+    if the site supported, then will download all the content and create a zip file.
+    if you wanna make it support other site, let me know
+    have fun
+    winxos 2017-04-02
+    just for educational purpose.
+    """
     server_vars = Manager()
     rule_id = server_vars.Value('i', -1)
     server_url = "{0.scheme}://{0.netloc}/".format(urlsplit(url_entry))
@@ -129,24 +141,45 @@ def download(url_entry):
         for i in range(len(href)):
             results.append(gi.next())
             if i % POOLS_SIZE == 0:
-                print("[debug] downloading progress %.2f%%" % (i * 100 / len(href)))
+                print("\r[debug] downloading progress %.2f%%" % (i * 100 / len(href)), end="")
+                sys.stdout.flush()
     else:
         results = []
         for hc in list(chapter_info)[:10]:
             results.append(func(hc))
     print('[debug] done. used:%f s' % (clock() - st))
+    print('[debug] saving to file...')
+    create_zip_file(title, author, results)
+    exit()
+
+
+# zip the file, ZIP_LZMA use lot of memory,
+def create_zip_file(title, author, results, method=zipfile.ZIP_DEFLATED):
+    file_name = title + " " + author + ".txt"
+    zip_file_name = title + " " + author + ".zip"
     save_txt(file_name, title + "\n" + author + "\n", mode='w')
     for c, k in results:
         save_txt(file_name, c + "\n" + k + "\n\n")
+    zf = zipfile.ZipFile(zip_file_name, 'w', method)  # zipfile.ZIP_LZMA
+    zf.write(file_name)
+    zf.close()
+    os.remove(file_name)
+    print('[debug] save to %s' % zip_file_name)
+
+
+def test():
+    # download('http://book.zongheng.com/showchapter/390021.html')
+    # download('http://www.aoyuge.com/14/14743/index.html')
+    # download('http://www.quanshu.net/book/38/38215/')
+    download('http://book.zongheng.com/showchapter/403749.html')
+    # download('http://www.quanshu.net/book/67/67604/')
 
 
 '''
 usage:
-download_novel("your novel chapter lists page link")
+download("your novel chapter lists page link")
 '''
 if __name__ == '__main__':
-    # download('http://book.zongheng.com/showchapter/390021.html')
-    # download('http://www.aoyuge.com/14/14743/index.html')
-    # download('http://www.quanshu.net/book/38/38215/')
-    # download('http://book.zongheng.com/showchapter/403749.html')
-    download('http://www.quanshu.net/book/67/67604/')
+    test()
+else:
+    print(download.__doc__)
