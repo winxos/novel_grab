@@ -4,7 +4,7 @@
 > winxos, AISTLAB 2017-03-31
 
 ## INSTALL:
-``` pip3 install AIST_novel_grab ```
+``` pip3 install aist_novel_grab ```
 
 ## USAGE:
 

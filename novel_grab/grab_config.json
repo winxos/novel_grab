@@ -4,11 +4,11 @@
       "site":"http://www.aoyuge.com/",
       "pool_size":"32",
       "replace":[
-        {"\r\n\r\n":"\n"}],
-      "title":"//*[@id=\"container\"]/div[1]/div/h1",
-      "author":"//*[@id=\"container\"]/div[1]/div/em",
-      "chapter_href":"//*[@id=\"main\"]/div/dl//dd/a/@href",
-      "chapter_name":"//*[@id=\"main\"]/div/dl//dd/a/text()",
+        {"\n\n":"\n"}],
+      "title":"//*[@class=\"btitle\"]/h1",
+      "author":"//*[@class=\"btitle\"]/em",
+      "chapter_href":"//*[@class=\"chapterlist\"]//dd/a/@href",
+      "chapter_name":"//*[@class=\"chapterlist\"]//dd/a/text()",
       "chapter_content":"//*[@id=\"BookText\"]",
       "charset":"gbk",
       "readme":"http://www.aoyuge.com/ 下载"
@@ -18,10 +18,10 @@
       "pool_size":"40",
       "replace":[
         {"\r\n\r\n":"\n"}],
-      "title":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/h1",
-      "author":"/html/body/div[4]/div/div[1]/div/div/div/div/div/div[3]/span",
-      "chapter_href":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/@href",
-      "chapter_name":"//*[@id=\"chapterListPanel\"]/div[6]/table//tr//td/a/text()",
+      "title":"//*[@class=\"tc txt\"]/h1",
+      "author":"//*[@class=\"tc txt\"]/span",
+      "chapter_href":"//*[@class=\"booklist tomeBean\"]/table//tr//td/a/@href",
+      "chapter_name":"//*[@class=\"booklist tomeBean\"]/table//tr//td/a/text()",
       "chapter_content":"//*[@id=\"chapterContent\"]//p",
       "charset":"utf8",
       "readme":"http://book.zongheng.com/ 下载"
@@ -31,10 +31,10 @@
       "pool_size":"24",
       "replace":[
         {"\r\n\r\n":"\n"}],
-      "title":"//*[@id=\"chapter\"]/div[2]/div[1]/strong",
-      "author":"//*[@id=\"chapter\"]/div[2]/div[1]/span[1]",
-      "chapter_href":"//*[@id=\"chapter\"]/div[2]/div[2]/ul/div[2]//li/a/@href",
-      "chapter_name":"//*[@id=\"chapter\"]/div[2]/div[2]/ul/div[2]//li/a/text()",
+      "title":"//*[@class=\"chapName\"]/strong",
+      "author":"//*[@class=\"r\"]",
+      "chapter_href":"//*[@class=\"clearfix dirconone\"]//li/a/@href",
+      "chapter_name":"//*[@class=\"clearfix dirconone\"]//li/a/text()",
       "chapter_content":"//*[@id=\"content\"]",
       "charset":"gbk",
       "readme":"http://www.quanshu.net/ 下载"

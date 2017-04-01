@@ -19,11 +19,11 @@ TRY_TIMES = 3
 SINGLE_THREAD_DEBUG = False
 
 CONFIG = None
+import pkgutil  # 必须采用pkgutil.get_data才能读取egg格式包中的数据
 
 try:
-    with open('grab_config.json', 'r', encoding='utf-8') as fg:
-        CONFIG = json.load(fg)
-        # print("[debug] config loaded.")
+    f = pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8')  #
+    CONFIG = json.loads(f)
 except IOError as e:
     print("[error] %s" % e)
     exit()
@@ -93,7 +93,7 @@ def scrape(rule_id, chapter_info):
     return c, p
 
 
-def download_novel(url_entry):
+def download(url_entry):
     server_vars = Manager()
     rule_id = server_vars.Value('i', -1)
     server_url = "{0.scheme}://{0.netloc}/".format(urlsplit(url_entry))
@@ -113,10 +113,12 @@ def download_novel(url_entry):
     author = get_items(html, CONFIG["rules"][rule_id]["author"])[0].xpath("string(.)")
     file_name = title + " " + author + ".txt"
     href = get_items(html, CONFIG["rules"][rule_id]["chapter_href"])
+    if not href:  # []
+        print("[error] grab pattern can't match.")
+        return
     if not str(href[0]).startswith("http"):  # not absolute link
         href = [server_url + h for h in href]
     capital = get_items(html, CONFIG["rules"][rule_id]["chapter_name"])
-    save_txt(file_name, title + "\n" + author + "\n", mode='w')
     chapter_info = zip(href, capital)
     print("[debug] downloading: %s" % file_name)
     func = partial(scrape, rule_id)  # wrap multiple arguments
@@ -132,10 +134,10 @@ def download_novel(url_entry):
         results = []
         for hc in list(chapter_info)[:10]:
             results.append(func(hc))
-
     print('[debug] done. used:%f s' % (clock() - st))
+    save_txt(file_name, title + "\n" + author + "\n", mode='w')
     for c, k in results:
-        save_txt(file_name, c + "\n" + k + "\n")
+        save_txt(file_name, c + "\n" + k + "\n\n")
 
 
 '''
@@ -143,7 +145,8 @@ usage:
 download_novel("your novel chapter lists page link")
 '''
 if __name__ == '__main__':
-    # download_novel('http://book.zongheng.com/showchapter/390021.html')
-    download_novel('http://www.aoyuge.com/14/14743/index.html')
-    # download_novel('http://www.quanshu.net/book/38/38215/')
-    # download_novel('http://book.zongheng.com/showchapter/403749.html')
+    # download('http://book.zongheng.com/showchapter/390021.html')
+    # download('http://www.aoyuge.com/14/14743/index.html')
+    # download('http://www.quanshu.net/book/38/38215/')
+    # download('http://book.zongheng.com/showchapter/403749.html')
+    download('http://www.quanshu.net/book/67/67604/')
