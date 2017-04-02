@@ -141,15 +141,16 @@ def download(url_entry):
         for i in range(len(href)):
             results.append(gi.next())
             if i % POOLS_SIZE == 0:
-                print("\r[debug] downloading progress %.2f%%" % (i * 100 / len(href)), end="")
+                print("\r[debug] downloading progress %.2f%%" % ((i + 1) * 100 / len(href)), end="")
                 sys.stdout.flush()
     else:
         results = []
         for hc in list(chapter_info)[:10]:
             results.append(func(hc))
-    print('[debug] done. used:%f s' % (clock() - st))
-    print('[debug] saving to file...')
-    create_zip_file(title, author, results)
+    print('\r[debug] download done. used:%f s' % (clock() - st))
+    print('[debug] saving...')
+    create_zip_file(title, author, results, method=zipfile.ZIP_LZMA)
+    print('[debug] all done.')
     exit()
 
 
@@ -164,15 +165,16 @@ def create_zip_file(title, author, results, method=zipfile.ZIP_DEFLATED):
     zf.write(file_name)
     zf.close()
     os.remove(file_name)
-    print('[debug] save to %s' % zip_file_name)
+    print('[debug] saved to [%s]' % zip_file_name)
 
 
 def test():
+    print(download.__doc__)
+    download('http://book.zongheng.com/showchapter/403749.html')
+    # download('http://www.quanshu.net/book/67/67604/')
     # download('http://book.zongheng.com/showchapter/390021.html')
     # download('http://www.aoyuge.com/14/14743/index.html')
     # download('http://www.quanshu.net/book/38/38215/')
-    download('http://book.zongheng.com/showchapter/403749.html')
-    # download('http://www.quanshu.net/book/67/67604/')
 
 
 '''
@@ -182,4 +184,5 @@ download("your novel chapter lists page link")
 if __name__ == '__main__':
     test()
 else:
-    print(download.__doc__)
+    # print(download.__doc__)
+    pass
