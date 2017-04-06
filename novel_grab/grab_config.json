@@ -1,43 +1,52 @@
 {
-  "rules": [
+  "sites": [
     {
-      "site":"http://www.aoyuge.com/",
-      "pool_size":"8",
-      "replace":[
-        {"\n\n":"\n"}],
-      "title":"//*[@class=\"btitle\"]/h1",
-      "author":"//*[@class=\"btitle\"]/em",
-      "chapter_href":"//*[@class=\"chapterlist\"]//dd/a/@href",
-      "chapter_name":"//*[@class=\"chapterlist\"]//dd/a/text()",
-      "chapter_content":"//*[@id=\"BookText\"]",
-      "charset":"gbk",
-      "readme":"http://www.aoyuge.com/ 下载"
+      "site": "http://www.aoyuge.com/",
+      "pool_size": "8",
+      "replace": [
+        {
+          "\n\n": "\n"
+        }
+      ],
+      "title": "//*[@class=\"btitle\"]/h1",
+      "author": "//*[@class=\"btitle\"]/em",
+      "chapter_href": "//*[@class=\"chapterlist\"]//dd/a/@href",
+      "chapter_name": "//*[@class=\"chapterlist\"]//dd/a/text()",
+      "chapter_content": "//*[@id=\"BookText\"]",
+      "charset": "gbk",
+      "readme": "http://www.aoyuge.com/ 下载"
     },
     {
-      "site":"http://book.zongheng.com/",
-      "pool_size":"10",
-      "replace":[
-        {"\r\n\r\n":"\n"}],
-      "title":"//*[@class=\"tc txt\"]/h1",
-      "author":"//*[@class=\"tc txt\"]/span",
-      "chapter_href":"//*[@class=\"booklist tomeBean\"]/table//tr//td/a/@href",
-      "chapter_name":"//*[@class=\"booklist tomeBean\"]/table//tr//td/a/text()",
-      "chapter_content":"//*[@id=\"chapterContent\"]//p",
-      "charset":"utf8",
-      "readme":"http://book.zongheng.com/ 下载"
+      "site": "http://book.zongheng.com/",
+      "pool_size": "10",
+      "replace": [
+        {
+          "\r\n\r\n": "\n"
+        }
+      ],
+      "title": "//*[@class=\"tc txt\"]/h1",
+      "author": "//*[@class=\"tc txt\"]/span",
+      "chapter_href": "//*[@class=\"booklist tomeBean\"]/table//tr//td/a/@href",
+      "chapter_name": "//*[@class=\"booklist tomeBean\"]/table//tr//td/a/text()",
+      "chapter_content": "//*[@id=\"chapterContent\"]//p",
+      "charset": "utf8",
+      "readme": "http://book.zongheng.com/ 下载"
     },
     {
-      "site":"http://www.quanshu.net/",
-      "pool_size":"6",
-      "replace":[
-        {"\r\n\r\n":"\n"}],
-      "title":"//*[@class=\"chapName\"]/strong",
-      "author":"//*[@class=\"r\"]",
-      "chapter_href":"//*[@class=\"clearfix dirconone\"]//li/a/@href",
-      "chapter_name":"//*[@class=\"clearfix dirconone\"]//li/a/text()",
-      "chapter_content":"//*[@id=\"content\"]",
-      "charset":"gbk",
-      "readme":"http://www.quanshu.net/ 下载"
+      "site": "http://www.quanshu.net/",
+      "pool_size": "6",
+      "replace": [
+        {
+          "\r\n\r\n": "\n"
+        }
+      ],
+      "title": "//*[@class=\"chapName\"]/strong",
+      "author": "//*[@class=\"r\"]",
+      "chapter_href": "//*[@class=\"clearfix dirconone\"]//li/a/@href",
+      "chapter_name": "//*[@class=\"clearfix dirconone\"]//li/a/text()",
+      "chapter_content": "//*[@id=\"content\"]",
+      "charset": "gbk",
+      "readme": "http://www.quanshu.net/ 下载"
     }
   ]
 }

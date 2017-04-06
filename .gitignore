@@ -4,3 +4,4 @@ AIST_novel_grab.egg-info/
 build/
 nitrotyper.egg-info/
 novel_grab/__pycache__/
+dist/AIST_novel_grab-0.8-py3.5.egg
