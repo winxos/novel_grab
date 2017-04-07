@@ -9,8 +9,9 @@
 ## USAGE:
 
 ``` python
-from novel_grab import novel_grab
-novel_grab.download('url of the novel chapters')
+    d = Downloader('http://book.zongheng.com/showchapter/403749.html')
+    d.start()
+    print(d.get_info())
 ```
 
 *Just for educational purpose, take care of yourself.*

@@ -8,14 +8,14 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 setup(
     name='AIST_novel_grab',
-    version='0.8',
+    version='1.0.0',
     description='novel grab service',
     long_description=long_description,
     author='winxos',
     author_email='winxos@hotmail.com',
     url='https://github.com/winxos/novel_grab',  # use the URL to the github repo
     download_url='https://github.com/winxos/novel_grab',
-    keywords=['scrape', 'winxos', 'aist'],  # arbitrary keywords
+    keywords=['crawler', 'winxos', 'aist'],  # arbitrary keywords
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
