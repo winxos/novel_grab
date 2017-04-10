@@ -1,5 +1,5 @@
 # coding:utf-8
-# general novel scraper
+# general novel crawler
 # env:python 3.5
 # license:MIT
 # author:winxos
@@ -14,16 +14,14 @@ from multiprocessing import Pool
 import multiprocessing
 from time import clock
 import zipfile
-import os  # remove file
 import pkgutil  # 必须采用pkgutil.get_data才能读取egg格式包中的数据
 from multiprocessing.pool import ThreadPool
 from threading import Thread
-import time
 import itertools
 
 ENABLE_DEBUG_OUTPUT = True
-OPEN_MULTI_THREAD = False
-THREAD_NUMS = 8
+OPEN_MULTI_THREAD = True
+THREAD_NUMS = 10
 
 
 def m_print(s, end="\n"):
@@ -51,24 +49,30 @@ class Downloader:
     site_args = {}
     items = {}
     info = {}
+    sites_config = None
 
-    def __init__(self, url):
+    def __init__(self):
         self.info["percent"] = 0
-        sites_config = None
         try:
-            sites_config = json.loads(pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8'))
+            self.sites_config = json.loads(pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8'))
         except IOError as e:
             m_print("[error] %s" % e)
             exit()
-        if not self.get_site_args(url, sites_config):
-            exit()
-        if not self.get_novel_info(url):
-            exit()
+        supported_sites = []
+        for n in self.sites_config["sites"]:
+            supported_sites.append(n["site"])
+        self.info["supported_sites"] = supported_sites
 
-    def get_site_args(self, url_entry, sc):
+    def set_url(self, url):
+        if self.get_site_args(url):
+            if self.get_novel_info(url):
+                return True
+        return False
+
+    def get_site_args(self, url_entry):
         rule_id = -1
         server_url = "{0.scheme}://{0.netloc}/".format(urlsplit(url_entry))
-        for i, info in enumerate(sc["sites"]):
+        for i, info in enumerate(self.sites_config["sites"]):
             if server_url == info["site"]:
                 rule_id = i
                 m_print("[debug] match config %s with rule %s" % (server_url, rule_id))
@@ -76,7 +80,7 @@ class Downloader:
         if rule_id < 0:
             print("[debug] 该网站暂时不支持")
             return False
-        self.site_args = sc["sites"][rule_id]
+        self.site_args = self.sites_config["sites"][rule_id]
         if url_entry.endswith("/"):  # for some relative href site
             server_url = url_entry
         self.items["server_url"] = server_url
@@ -148,6 +152,7 @@ class Downloader:
         m_print("[debug] author:%s" % self.items["author"])
         m_print("[debug] chapters:%d" % len(chapter_name))
         self.info["novel_name"] = "%s %s" % (self.items["title"], self.items["author"])
+        self.info["file_name"] = self.info["novel_name"] + ".zip"
         self.items["chapters"] = zip(chapter_href, chapter_name)
         return True
 
@@ -180,7 +185,7 @@ class Downloader:
         just for educational purpose.
         """
 
-        with Pool(processes=multiprocessing.cpu_count() * 2) as pool:
+        with Pool(processes=multiprocessing.cpu_count()) as pool:
 
             st = clock()
             m_print("[debug] downloading: %s" % self.items["title"])
@@ -198,59 +203,54 @@ class Downloader:
             results = []
             for i, r in enumerate(tasks):
                 results.append(r.get())
-                self.info["percent"] = (i + 1) * 100 / len(tasks)
+                self.info["percent"] = i * 100 / len(tasks)
                 if i % multiprocessing.cpu_count() == 0:
                     m_print("\r[debug] downloading progress %.2f%%" % (self.info["percent"]), end="")
-            m_print('\r[debug] download done. used:%f s' % (clock() - st))
+            m_print('\r[debug] download done. used:%.2f s' % (clock() - st))
             if OPEN_MULTI_THREAD:
                 results = list_2d_to_1d(results)
-            self.create_zip_file(results, method=zipfile.ZIP_LZMA)
+            self.create_zip_file(results)  # , method=zipfile.ZIP_LZMA)#ZIP_LZMA is slow more than deflated
             m_print('[debug] all done.')
 
     def start(self):
-        Thread(target=self.run()).start()
+        t = Thread(target=self.run())
+        t.start()
 
     def get_info(self):
         return self.info
 
     # zip the file, ZIP_LZMA use lot of memory,
     def create_zip_file(self, results, method=zipfile.ZIP_DEFLATED):
-        def save_txt(name, data, mode='a'):
-            with open(name, mode, encoding='utf8') as f:
-                f.write(data)
-
         m_print('[debug] saving...')
+        st = clock()
         raw_file_name = self.info["novel_name"] + ".txt"
-        zip_file_name = self.info["novel_name"] + ".7z"
-        save_txt(raw_file_name, self.items["title"] + "\n" + self.items["author"] + "\n", mode='w')
-        for c, k in results:
-            save_txt(raw_file_name, c + "\n" + k + "\n\n")
-        zf = zipfile.ZipFile(zip_file_name, 'w', method)  # zipfile.ZIP_LZMA
-        zf.write(raw_file_name)
+        novel_data = "%s\n%s\n\n" % (self.items["title"], self.items["author"])
+        novel_data += "\n".join("%s\n%s\n" % r for r in results)  # fast than normal for
+        print("[debug] format data used:%.2f s" % (clock() - st))
+        zf = zipfile.ZipFile(self.info["file_name"], 'w', method)  # zipfile.ZIP_LZMA
+        zf.writestr(raw_file_name, novel_data)  # add memory file,very fast than save to disk
         zf.close()
-        os.remove(raw_file_name)
+        print("[debug] zip data used:%.2f s" % (clock() - st))
         self.info["percent"] = 100
-        self.info["file_name"] = zip_file_name
-        m_print('[debug] saved to [%s]' % zip_file_name)
+        m_print('[debug] saved to [%s]' % self.info["file_name"])
 
 
 def test():
-    d = Downloader('http://book.zongheng.com/showchapter/403749.html')
-    d.start()
-    # while d.get_info()["percent"] < 100:
-    #     print("\rDownloaded %.2f" % d.get_info()["percent"], end="")
-        # time.sleep(1)
+    d = Downloader()
+    print(d.get_info())
+    if d.set_url('http://book.zongheng.com/showchapter/221579.html'):
+        d.start()
         # d.download('http://www.quanshu.net/book/67/67604/')
         # d.download('http://book.zongheng.com/showchapter/390021.html')
         # d.download('http://www.aoyuge.com/14/14743/index.html')
         # download('http://www.quanshu.net/book/38/38215/')
-    print(d.get_info())
+
 
 '''
 usage:
-    d = Downloader('http://book.zongheng.com/showchapter/403749.html')
-    d.start()
-    print(d.get_info())
+    d = Downloader()
+    if d.set_url('http://book.zongheng.com/showchapter/221579.html'):
+        d.start()
 '''
 if __name__ == '__main__':
     test()
