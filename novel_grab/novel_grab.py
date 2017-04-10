@@ -46,13 +46,10 @@ def extract_data(selector, xpath):
 
 
 class Downloader:
-    site_args = {}
-    items = {}
-    info = {}
-    sites_config = None
-
     def __init__(self):
-        self.info["percent"] = 0
+        self.items = {}  # must not assign outside
+        self.site_args = {}
+        self.info = {"percent": 0}
         try:
             self.sites_config = json.loads(pkgutil.get_data("novel_grab", 'grab_config.json').decode('utf-8'))
         except IOError as e:
@@ -64,6 +61,8 @@ class Downloader:
         self.info["supported_sites"] = supported_sites
 
     def set_url(self, url):
+        if not url.startswith("http"):
+            url = "http://" + url
         if self.get_site_args(url):
             if self.get_novel_info(url):
                 return True
@@ -127,14 +126,16 @@ class Downloader:
 
     def get_novel_info(self, url_entry):
         html = self.get_content(url_entry)
-        self.items["title"] = extract_data(html, self.site_args["title"])[0].xpath("string(.)")
+        self.items["title"] = extract_data(html, self.site_args["title"])
         if not self.items["title"]:  # []
             m_print("[error] grab title pattern can't match.")
             return False
-        self.items["author"] = extract_data(html, self.site_args["author"])[0].xpath("string(.)")
+        self.items["title"] = self.items["title"][0].xpath("string(.)")
+        self.items["author"] = extract_data(html, self.site_args["author"])
         if not self.items["author"]:  # []
             m_print("[error] grab author pattern can't match.")
             return False
+        self.items["author"] = self.items["author"][0].xpath("string(.)")
         chapter_name = extract_data(html, self.site_args["chapter_name"])
         if not chapter_name:  # []
             m_print("[error] grab chapter links pattern can't match.")
@@ -238,7 +239,7 @@ class Downloader:
 def test():
     d = Downloader()
     print(d.get_info())
-    if d.set_url('http://book.zongheng.com/showchapter/221579.html'):
+    if d.set_url('http://book.zongheng.com/showchapter/510426.html'):
         d.start()
         # d.download('http://www.quanshu.net/book/67/67604/')
         # d.download('http://book.zongheng.com/showchapter/390021.html')
