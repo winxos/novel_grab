@@ -1,0 +1,1 @@
+pip3 uninstall aistlab_novel_grab -y

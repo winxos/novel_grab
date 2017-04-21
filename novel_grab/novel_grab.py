@@ -18,6 +18,7 @@ import pkgutil  # 必须采用pkgutil.get_data才能读取egg格式包中的数�
 from multiprocessing.pool import ThreadPool
 from threading import Thread
 import itertools
+import sys
 
 ENABLE_DEBUG_OUTPUT = True
 OPEN_MULTI_THREAD = True
@@ -214,7 +215,7 @@ class Downloader:
             m_print('[debug] all done.')
 
     def start(self):
-        t = Thread(target=self.run())
+        t = Thread(target=self.run)
         t.start()
 
     def get_info(self):
@@ -253,8 +254,20 @@ usage:
     if d.set_url('http://book.zongheng.com/showchapter/221579.html'):
         d.start()
 '''
+
+
+def download():
+    args = sys.argv[1:]
+    if len(args) > 0:
+        print("downloading:%s" % args[0])
+        d = Downloader()
+        if d.set_url(args[0]):
+            d.start()
+        else:
+            print("[%s] is not a valid enter point of novel chapters.")
+    else:
+        print("USAGE:\n\tnovel_download http://the_url_of_novel_chapters_page")
+
+
 if __name__ == '__main__':
-    test()
-else:
-    # m_print(download.__doc__)
-    pass
+    download()

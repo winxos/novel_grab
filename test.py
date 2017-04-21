@@ -26,5 +26,11 @@ if __name__ == "__main__":
     print(id(b.c))
 
     b=Downloader()
-    b.set_url("book.zongheng.com")
+    print(b.set_url("http://book.zongheng.com/showchapter/510426.html"))
+    print(b.items)
+    b.start()
 
+    c=Downloader()
+    print(c.set_url("http://book.zongheng.com/showchapter/221579.html"))
+    print(c.items)
+    c.start()
