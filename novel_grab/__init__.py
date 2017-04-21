@@ -5,10 +5,9 @@
 # winxos,AISTLAB
 # Since 2017-02-19
 
-__version__ = "1.2.10"
+__version__ = "1.2.12"
 __title__ = "AISTLAB_novel_grab"
 __description__ = "novel grab crawler module using python3 and lxml"
-__long_description__ = open('README.rst').read()
 __url__ = "https://github.com/winxos/novel_grab"
 __docsurl__ = ""
 __author__ = "winxos"

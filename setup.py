@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-from novel_grab import (__author__, __description__, __long_description__, __email__, __license__,
+from novel_grab import (__author__, __description__, __email__, __license__,
                         __title__, __url__, __version__)
 
 setup(
     name=__title__,
     version=__version__,
     description=__description__,
-    long_description=__long_description__,
+    long_description=open('README.rst').read(),
     author=__author__,
     author_email=__email__,
     license=__license__,
